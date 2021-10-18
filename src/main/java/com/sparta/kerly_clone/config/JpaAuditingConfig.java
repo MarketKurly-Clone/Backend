@@ -1,4 +1,4 @@
-package com.sparta.errorpool.config;
+package com.sparta.kerly_clone.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
