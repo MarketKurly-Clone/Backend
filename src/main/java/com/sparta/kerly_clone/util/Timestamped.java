@@ -1,4 +1,4 @@
-package com.sparta.errorpool.util;
+package com.sparta.kerly_clone.util;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
