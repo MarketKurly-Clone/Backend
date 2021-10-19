@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 # Compiled class file
 *.class
+*.properties
 
 # Log file
 *.log
@@ -60,4 +60,3 @@ out/
 
 ### VS Code ###
 .vscode/
->>>>>>> 7be10bc (최초커밋)
