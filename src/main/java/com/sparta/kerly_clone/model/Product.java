@@ -3,6 +3,7 @@ package com.sparta.kerly_clone.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,6 +40,27 @@ public class Product {
     private String category2;
 
     @Column
+    private String image;
+
+    @Column
     private int viewCount;
 
+    @OneToMany(mappedBy = "product")
+    private List<Review> reviews;
+
+    public Product(String name, Long price, String description, int unit, String delivery, String category1, String category2, String image,int viewCount) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.unit = unit;
+        this.delivery = delivery;
+        this.image = image;
+        this.category1 = category1;
+        this.category2 = category2;
+        this.viewCount = viewCount;
+    }
+
+    public void deleteReview(Review review) {
+        this.reviews.remove(review);
+    }
 }
