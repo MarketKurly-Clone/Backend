@@ -63,4 +63,14 @@ public class ReviewService {
 
         return new ReviewListResponseDto(reviews, reviewCount);
     }
+
+    @Transactional
+    public void deleteReview(Long productId, Long reviewId) {
+        Product product = loadProduct(productId);          //product 존재하는지 확인
+        Review review = reviewRepository.findById(reviewId).orElseThrow(
+                () -> new CustomErrorException("해당 댓글이 존재하지 않습니다.")
+        );
+        product.deleteReview(review);
+        reviewRepository.delete(review);
+    }
 }
