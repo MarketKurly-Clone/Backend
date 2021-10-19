@@ -1,6 +1,7 @@
 package com.sparta.kerly_clone.service;
 
 import com.sparta.kerly_clone.dto.requestDto.ReviewRequestDto;
+import com.sparta.kerly_clone.dto.responseDto.ReviewListResponseDto;
 import com.sparta.kerly_clone.dto.responseDto.ReviewResponseDto;
 import com.sparta.kerly_clone.exception.CustomErrorException;
 import com.sparta.kerly_clone.model.Product;
@@ -10,8 +11,14 @@ import com.sparta.kerly_clone.repository.ProductRepository;
 import com.sparta.kerly_clone.repository.ReviewRepository;
 import com.sparta.kerly_clone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -43,5 +50,17 @@ public class ReviewService {
         return productRepository.findById(productId).orElseThrow(
                 () -> new CustomErrorException("해당 게시물이 존재하지 않습니다.")
         );
+    }
+
+    public ReviewListResponseDto getReviewList(Long productId, int page, int display) {
+        Product product = loadProduct(productId);          //product 존재하는지 확인
+
+        PageRequest pageRequest = PageRequest.of(page - 1, display, Sort.by("createdAt").descending());
+        List<ReviewResponseDto> reviews = reviewRepository.findAllByProduct(product, pageRequest)
+                .stream().map(ReviewResponseDto::new)
+                .collect(Collectors.toCollection(ArrayList::new));
+        Long reviewCount = reviewRepository.countByProductId(productId);
+
+        return new ReviewListResponseDto(reviews, reviewCount);
     }
 }
