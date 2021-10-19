@@ -79,4 +79,13 @@ public class RestApiExceptionHandler {
                 HttpStatus.OK
         );
     }
+
+    @ExceptionHandler(value = {UsernameNotFoundException.class})
+    public ResponseEntity<Object> UsernameNotFoundExceptionHandler(RuntimeException ex) {
+        ResponseDto restApiException = new ResponseDto("failed",ex.getMessage(),"");
+        return new ResponseEntity<>(
+                restApiException,
+                HttpStatus.OK
+        );
+    }
 }
