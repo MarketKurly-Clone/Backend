@@ -36,10 +36,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewResponseDto createReview(ReviewRequestDto requestDto) {
-        User user = userRepository.findById(1L).orElseThrow(
-                () -> new UnauthenticatedException("존재하지 않는 사용자입니다.")
-        );
+    public ReviewResponseDto createReview(User user, ReviewRequestDto requestDto) {
         Product product = loadProduct(requestDto.getProductId());          //product 존재하는지 확인
         Review savedReview = reviewRepository.save(new Review(requestDto, user));
         savedReview.addReview(product);
@@ -60,13 +57,17 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(Long productId, Long reviewId) {
+    public void deleteReview(User user, Long productId, Long reviewId) {
         Product product = loadProduct(productId);          //product 존재하는지 확인
         Review review = reviewRepository.findById(reviewId).orElseThrow(
                 () -> new NoItemException("해당 댓글이 존재하지 않습니다.")
         );
-        product.deleteReview(review);
-        reviewRepository.delete(review);
+        if (review.getUser().equals(user)) {
+            product.deleteReview(review);
+            reviewRepository.delete(review);
+        } else {
+            throw new UnauthenticatedException("삭제 권한이 없습니다.");
+        }
     }
 
     private Product loadProduct(Long productId) {

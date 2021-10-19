@@ -37,7 +37,7 @@ public class CartController {
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }
-        User user = userService.loadUsername(userDetails.getUsername());
+        User user = userService.loadUserEamil(userDetails.getUsername());
         Long itemCount = cartService.addProduct(requestDto, user);
         Map<String, Long> responseMap = new HashMap<>();
         responseMap.put("itemCount", itemCount);
@@ -50,7 +50,7 @@ public class CartController {
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }
-        User user = userService.loadUsername(userDetails.getUsername());
+        User user = userService.loadUserEamil(userDetails.getUsername());
         CartResponseDto responseDto = cartService.getCart(user);
 
         return new ResponseDto("success", "성공적으로 조회 되었습니다", responseDto);

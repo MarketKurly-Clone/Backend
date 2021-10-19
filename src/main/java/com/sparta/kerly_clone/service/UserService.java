@@ -59,8 +59,8 @@ public class UserService {
         return userEmail;
     }
 
-    public User loadUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
+    public User loadUserEamil(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("로그인 정보가 존재하지 않습니다.")
         );
     }
