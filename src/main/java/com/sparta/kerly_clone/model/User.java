@@ -3,6 +3,8 @@ package com.sparta.kerly_clone.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +27,12 @@ public class User {
 
     @Column
     private String username;
+
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviewList = new ArrayList<>();
+
+    public User(String email, String username) {
+        this.email = email;
+        this.username = username;
+    }
 }
