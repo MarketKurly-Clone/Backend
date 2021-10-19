@@ -1,7 +1,7 @@
 package com.sparta.kerly_clone.util;
 
 
-import com.sparta.kerly_clone.dto.SignupRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.SignupRequestDto;
 import com.sparta.kerly_clone.exception.*;
 import com.sparta.kerly_clone.model.User;
 import com.sparta.kerly_clone.repository.UserRepository;

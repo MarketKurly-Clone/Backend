@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Review extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;
 
@@ -31,7 +31,6 @@ public class Review extends Timestamped {
     @NotNull
     private String content;
 
-    @Column(columnDefinition = "long default 0L")
     private Long likedCount;
 
     public Review(ReviewRequestDto requestDto, User user) {

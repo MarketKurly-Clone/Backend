@@ -3,7 +3,8 @@ package com.sparta.kerly_clone.service;
 import com.sparta.kerly_clone.dto.requestDto.ReviewRequestDto;
 import com.sparta.kerly_clone.dto.responseDto.ReviewListResponseDto;
 import com.sparta.kerly_clone.dto.responseDto.ReviewResponseDto;
-import com.sparta.kerly_clone.exception.CustomErrorException;
+import com.sparta.kerly_clone.exception.NoItemException;
+import com.sparta.kerly_clone.exception.UnauthenticatedException;
 import com.sparta.kerly_clone.model.Product;
 import com.sparta.kerly_clone.model.Review;
 import com.sparta.kerly_clone.model.User;
@@ -37,19 +38,13 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto createReview(ReviewRequestDto requestDto) {
         User user = userRepository.findById(1L).orElseThrow(
-                () -> new CustomErrorException("존재하지 않는 사용자입니다.")
+                () -> new UnauthenticatedException("존재하지 않는 사용자입니다.")
         );
         Product product = loadProduct(requestDto.getProductId());          //product 존재하는지 확인
         Review savedReview = reviewRepository.save(new Review(requestDto, user));
         savedReview.addReview(product);
 
         return new ReviewResponseDto(savedReview);
-    }
-
-    private Product loadProduct(Long productId) {
-        return productRepository.findById(productId).orElseThrow(
-                () -> new CustomErrorException("해당 게시물이 존재하지 않습니다.")
-        );
     }
 
     public ReviewListResponseDto getReviewList(Long productId, int page, int display) {
@@ -68,9 +63,15 @@ public class ReviewService {
     public void deleteReview(Long productId, Long reviewId) {
         Product product = loadProduct(productId);          //product 존재하는지 확인
         Review review = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new CustomErrorException("해당 댓글이 존재하지 않습니다.")
+                () -> new NoItemException("해당 댓글이 존재하지 않습니다.")
         );
         product.deleteReview(review);
         reviewRepository.delete(review);
+    }
+
+    private Product loadProduct(Long productId) {
+        return productRepository.findById(productId).orElseThrow(
+                () -> new NoItemException("해당 상품이 존재하지 않습니다.")
+        );
     }
 }

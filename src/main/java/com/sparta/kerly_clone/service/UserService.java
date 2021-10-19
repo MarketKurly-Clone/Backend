@@ -1,7 +1,8 @@
 package com.sparta.kerly_clone.service;
 
-import com.sparta.kerly_clone.dto.SignupRequestDto;
-import com.sparta.kerly_clone.dto.UserRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.SignupRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.UserRequestDto;
+import com.sparta.kerly_clone.exception.UnauthenticatedException;
 import com.sparta.kerly_clone.model.User;
 import com.sparta.kerly_clone.repository.UserRepository;
 import com.sparta.kerly_clone.security.JwtTokenProvider;
@@ -33,8 +34,14 @@ public class UserService {
 
     public String createToken(UserRequestDto userRequestDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userRequestDto.getEmail(),userRequestDto.getPassword());
+                new UsernamePasswordAuthenticationToken(userRequestDto.getEmail(), userRequestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return jwtTokenProvider.createToken(authentication);
+    }
+
+    public User loadUser(long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new UnauthenticatedException("해당 사용자가 존재하지 않습니다.")
+        );
     }
 }

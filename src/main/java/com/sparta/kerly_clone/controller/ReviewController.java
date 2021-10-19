@@ -8,8 +8,6 @@ import com.sparta.kerly_clone.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 public class ReviewController {
 
@@ -27,16 +25,14 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public ResponseDto getReviews(@RequestParam Long productId, @RequestParam int page, @RequestParam int display){
+    public ResponseDto getReviews(@RequestParam("productId") Long productId, @RequestParam("page") int page, @RequestParam("display") int display){
         ReviewListResponseDto responseDto = reviewService.getReviewList(productId, page, display);
         return new ResponseDto("success", "성공적으로 댓글이 조회되었습니다.", responseDto);
     }
 
     @DeleteMapping("/reviews")
-    public ResponseDto deleteReview(@RequestBody Map<String, Long> map) {
-        Long productId = map.get("productId");
-        Long reviewId = map.get("reviewId");
-        reviewService.deleteReview(productId, reviewId);
+    public ResponseDto deleteReview(@RequestBody ReviewRequestDto requestDto) {
+        reviewService.deleteReview(requestDto.getProductId(), requestDto.getReviewId());
 
         return new ResponseDto("success", "성공적으로 댓글이 삭제되었습니다.", "");
     }

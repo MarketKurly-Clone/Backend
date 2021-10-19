@@ -1,7 +1,7 @@
 package com.sparta.kerly_clone.controller;
 
-import com.sparta.kerly_clone.dto.SignupRequestDto;
-import com.sparta.kerly_clone.dto.UserRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.SignupRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.UserRequestDto;
 import com.sparta.kerly_clone.dto.responseDto.ResponseDto;
 import com.sparta.kerly_clone.exception.JwtTokenExpiredException;
 import com.sparta.kerly_clone.exception.UnauthenticatedException;

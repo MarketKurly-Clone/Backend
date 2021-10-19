@@ -31,6 +31,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Review> reviewList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Cart> cartList = new ArrayList<>();
+
+
     public User(String email, String username) {
         this.email = email;
         this.username = username;

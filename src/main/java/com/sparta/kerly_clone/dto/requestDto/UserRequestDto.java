@@ -1,4 +1,4 @@
-package com.sparta.kerly_clone.dto;
+package com.sparta.kerly_clone.dto.requestDto;
 
 import lombok.Builder;
 import lombok.Getter;
