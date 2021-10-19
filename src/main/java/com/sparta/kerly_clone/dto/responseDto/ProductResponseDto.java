@@ -2,7 +2,7 @@ package com.sparta.kerly_clone.dto.responseDto;
 
 import com.sparta.kerly_clone.model.Cart;
 import com.sparta.kerly_clone.model.Product;
-정import lombok.Getter;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter

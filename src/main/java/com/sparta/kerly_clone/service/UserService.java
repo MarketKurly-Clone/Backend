@@ -48,11 +48,14 @@ public class UserService {
         String password = userRequestDto.getPassword().trim();
         if (email.equals("") || password.equals(""))
             throw new EmptyException("로그인 정보를 모두 입력해주세요.");
-        String passwordEncode = passwordEncoder.encode(userRequestDto.getPassword());
+
         User userEmail = userRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("회원정보가 일치하지 않습니다. 다시 입력해주세요."));
-        if (!userEmail.getPassword().equals(passwordEncode))
+
+        if (!passwordEncoder.matches(password, userEmail.getPassword())) {
             throw new UsernameNotFoundException("회원정보가 일치하지 않습니다. 다시 입력해주세요.");
+        }
+
         return userEmail;
     }
 
