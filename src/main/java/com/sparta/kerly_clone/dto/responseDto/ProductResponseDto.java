@@ -2,11 +2,11 @@ package com.sparta.kerly_clone.dto.responseDto;
 
 import com.sparta.kerly_clone.model.Cart;
 import com.sparta.kerly_clone.model.Product;
-import lombok.Builder;
-import lombok.Getter;
+정import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class ProductResponseDto {
     private Long productId;
     private String name;
