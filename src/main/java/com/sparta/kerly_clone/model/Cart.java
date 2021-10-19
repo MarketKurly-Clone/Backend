@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,9 +25,11 @@ public class Cart {
     private Product product;
 
     private Long amount;
+    private LocalDateTime addedAt;
 
     public void addProductAmount(Long amount) {
         this.amount += amount;
+        this.addedAt = LocalDateTime.now();
         user.getCartList().add(this);
     }
     public void addNewProduct(Product product, Long amount, User user) {

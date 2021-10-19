@@ -20,7 +20,7 @@ public class ProductService {
 
     public Page<Product> getProducts(String keyword) {
 
-        if( productRepository.findAll().size() == 0 ) {
+        if (productRepository.findAll().size() == 0) {
             getProductsFromApi(keyword);
         }
 

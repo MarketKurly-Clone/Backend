@@ -25,7 +25,7 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public ResponseDto getReviews(@RequestParam("productId") Long productId, @RequestParam("page") int page, @RequestParam("display") int display){
+    public ResponseDto getReviews(@RequestParam("productId") Long productId, @RequestParam("page") int page, @RequestParam("display") int display) {
         ReviewListResponseDto responseDto = reviewService.getReviewList(productId, page, display);
         return new ResponseDto("success", "성공적으로 댓글이 조회되었습니다.", responseDto);
     }

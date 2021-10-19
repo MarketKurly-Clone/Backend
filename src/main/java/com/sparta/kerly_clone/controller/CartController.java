@@ -1,11 +1,17 @@
 package com.sparta.kerly_clone.controller;
 
 import com.sparta.kerly_clone.dto.requestDto.CartRequestDto;
+import com.sparta.kerly_clone.dto.responseDto.CartResponseDto;
 import com.sparta.kerly_clone.dto.responseDto.ResponseDto;
+import com.sparta.kerly_clone.exception.NoItemException;
+import com.sparta.kerly_clone.exception.NoneLoginException;
 import com.sparta.kerly_clone.model.User;
+import com.sparta.kerly_clone.security.UserDetailsImpl;
 import com.sparta.kerly_clone.service.CartService;
 import com.sparta.kerly_clone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,13 +33,27 @@ public class CartController {
     }
 
     @PostMapping("/cart")
-    public ResponseDto addProduct(@Valid @RequestBody CartRequestDto requestDto) {
-        User user = userService.loadUser(1L);
+    public ResponseDto addCart(@Valid @RequestBody CartRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
+        }
+        User user = userService.loadUsername(userDetails.getUsername());
         Long itemCount = cartService.addProduct(requestDto, user);
         Map<String, Long> responseMap = new HashMap<>();
         responseMap.put("itemCount", itemCount);
 
         return new ResponseDto("success", "장바구니에 추가 되었습니다", responseMap);
+    }
+
+    @GetMapping("/cart")
+    public ResponseDto getCart(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
+        }
+        User user = userService.loadUsername(userDetails.getUsername());
+        CartResponseDto responseDto = cartService.getCart(user);
+
+        return new ResponseDto("success", "성공적으로 조회 되었습니다", responseDto);
     }
 }
 

@@ -1,6 +1,8 @@
 package com.sparta.kerly_clone.service;
 
 import com.sparta.kerly_clone.dto.requestDto.CartRequestDto;
+import com.sparta.kerly_clone.dto.responseDto.CartResponseDto;
+import com.sparta.kerly_clone.dto.responseDto.ProductResponseDto;
 import com.sparta.kerly_clone.exception.NoItemException;
 import com.sparta.kerly_clone.model.Cart;
 import com.sparta.kerly_clone.model.Product;
@@ -10,6 +12,10 @@ import com.sparta.kerly_clone.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -26,7 +32,7 @@ public class CartService {
     public Long addProduct(CartRequestDto requestDto, User user) {
         Product product = loadProduct(requestDto.getProductId());
         Cart cart = cartRepository.findByUserIdAndProduct(user.getId(), product).orElse(null);
-        if(cart == null){
+        if (cart == null) {
             cart = new Cart();
             cart.addNewProduct(product, requestDto.getAmount(), user);
         } else {
@@ -40,5 +46,11 @@ public class CartService {
         return productRepository.findById(productId).orElseThrow(
                 () -> new NoItemException("해당 상품이 존재하지 않습니다.")
         );
+    }
+
+    public CartResponseDto getCart(User user) {
+        List<ProductResponseDto> responseDtoList = cartRepository.findAllByUserOrderByAddedAtDesc(user).stream().map(ProductResponseDto::new).collect(Collectors.toCollection(ArrayList::new));
+        Long itemCount = cartRepository.countByUser(user);
+        return new CartResponseDto(responseDtoList, itemCount);
     }
 }

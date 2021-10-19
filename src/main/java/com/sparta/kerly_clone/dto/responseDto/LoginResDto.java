@@ -1,4 +1,4 @@
-package com.sparta.kerly_clone.dto;
+package com.sparta.kerly_clone.dto.responseDto;
 
 import com.sparta.kerly_clone.model.User;
 import lombok.Builder;

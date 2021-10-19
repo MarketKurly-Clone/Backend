@@ -1,13 +1,13 @@
 package com.sparta.kerly_clone.dto.responseDto;
 
 import com.sparta.kerly_clone.model.Review;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
+@Builder
 public class ReviewResponseDto {
     private Long reviewId;
     private String username;

@@ -1,8 +1,8 @@
 package com.sparta.kerly_clone.controller;
 
-import com.sparta.kerly_clone.dto.LoginResDto;
-import com.sparta.kerly_clone.dto.SignupRequestDto;
-import com.sparta.kerly_clone.dto.UserRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.SignupRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.UserRequestDto;
+import com.sparta.kerly_clone.dto.responseDto.LoginResDto;
 import com.sparta.kerly_clone.dto.responseDto.ResponseDto;
 import com.sparta.kerly_clone.exception.JwtTokenExpiredException;
 import com.sparta.kerly_clone.exception.UnauthenticatedException;
@@ -13,8 +13,6 @@ import com.sparta.kerly_clone.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
