@@ -1,4 +1,4 @@
-package com.sparta.kerly_clone.dto;
+package com.sparta.kerly_clone.dto.requestDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 @NoArgsConstructor
 @Getter
-public class ProductDto {
+public class ProductRequestDto {
     private String title;
     private Long price;
     private String description;
@@ -14,7 +14,7 @@ public class ProductDto {
     private String category2;
     private String image;
 
-    public ProductDto(JSONObject itemJson) {
+    public ProductRequestDto(JSONObject itemJson) {
         this.title = itemJson.getString("title");
         this.price = itemJson.getLong("lprice");
         this.description = itemJson.getString("category3") +itemJson.getString("mallName")+itemJson.getString("maker");

@@ -1,7 +1,7 @@
 package com.sparta.kerly_clone.service;
 
-import com.sparta.kerly_clone.dto.SignupRequestDto;
-import com.sparta.kerly_clone.dto.UserRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.SignupRequestDto;
+import com.sparta.kerly_clone.dto.requestDto.UserRequestDto;
 import com.sparta.kerly_clone.exception.EmptyException;
 import com.sparta.kerly_clone.exception.UsernameNotFoundException;
 import com.sparta.kerly_clone.model.User;
@@ -37,7 +37,7 @@ public class UserService {
 
     public String createToken(UserRequestDto userRequestDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userRequestDto.getEmail(),userRequestDto.getPassword());
+                new UsernamePasswordAuthenticationToken(userRequestDto.getEmail(), userRequestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return jwtTokenProvider.createToken(authentication);
     }
@@ -46,17 +46,22 @@ public class UserService {
 
         String email = userRequestDto.getEmail().trim();
         String password = userRequestDto.getPassword().trim();
-        if(email.equals("")||password.equals(""))
+        if (email.equals("") || password.equals(""))
             throw new EmptyException("로그인 정보를 모두 입력해주세요.");
 
-
-        String passwordEncode = passwordEncoder.encode(userRequestDto.getPassword());
         User userEmail = userRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("회원정보가 일치하지 않습니다. 다시 입력해주세요."));
 
-        if(!userEmail.getPassword().equals(passwordEncode))
+        if (!passwordEncoder.matches(password, userEmail.getPassword())) {
             throw new UsernameNotFoundException("회원정보가 일치하지 않습니다. 다시 입력해주세요.");
+        }
 
         return userEmail;
+    }
+
+    public User loadUserEamil(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException("로그인 정보가 존재하지 않습니다.")
+        );
     }
 }

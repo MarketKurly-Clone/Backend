@@ -1,6 +1,6 @@
 package com.sparta.kerly_clone.model;
 
-import com.sparta.kerly_clone.dto.ProductDto;
+import com.sparta.kerly_clone.dto.requestDto.ProductRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -64,7 +64,7 @@ public class Product {
         this.viewCount = viewCount;
     }
 
-    public Product(ProductDto productDto) {
+    public Product(ProductRequestDto productDto) {
         this.name = productDto.getTitle();
         this.price = productDto.getPrice();
         this.description = productDto.getDescription();

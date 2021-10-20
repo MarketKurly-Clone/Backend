@@ -1,10 +1,10 @@
-package com.sparta.kerly_clone.dto;
+package com.sparta.kerly_clone.dto.requestDto;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class UserRequestDto {
     private String email;
     private String password;

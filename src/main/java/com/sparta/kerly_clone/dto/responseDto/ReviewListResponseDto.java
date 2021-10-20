@@ -1,5 +1,6 @@
 package com.sparta.kerly_clone.dto.responseDto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

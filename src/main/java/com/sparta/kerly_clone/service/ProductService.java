@@ -1,6 +1,6 @@
 package com.sparta.kerly_clone.service;
 
-import com.sparta.kerly_clone.dto.ProductDto;
+import com.sparta.kerly_clone.dto.requestDto.ProductRequestDto;
 import com.sparta.kerly_clone.exception.EmptyException;
 import com.sparta.kerly_clone.model.Product;
 import com.sparta.kerly_clone.repository.ProductRepository;
@@ -32,11 +32,11 @@ public class ProductService {
         Page<Product> products = productRepository.findAll(PageRequest.of(start,display));
         if(products.isEmpty()) {
             String apiBody = getProductsFromApi(keyword);
-            List<ProductDto> productApi = fromJSONtoItems(apiBody);
+            List<ProductRequestDto> productApi = fromJSONtoItems(apiBody);
             products = new PageImpl(productApi, PageRequest.of(start,display), productApi.size());
 
             List<Product> productList = new ArrayList<>();
-            for(ProductDto productDto: productApi){
+            for(ProductRequestDto productDto: productApi){
                 productList.add(new Product(productDto));
             }
             productRepository.saveAll(productList);
@@ -60,14 +60,15 @@ public class ProductService {
         return responseEntity.getBody();
     }
 
-    public List<ProductDto> fromJSONtoItems(String result) {
+    public List<ProductRequestDto> fromJSONtoItems(String result) {
         JSONObject json = new JSONObject(result);
-//        start = json.getInt("start");
+//        start = json.getInt("start"); 2차 프레임시 사용 예정
+//        display = json.getInt("display"); 2차 프레임시 사용 예정
         JSONArray items = json.getJSONArray("items");
-        List<ProductDto> productDtos = new ArrayList<>();
+        List<ProductRequestDto> productDtos = new ArrayList<>();
         for(int i=0; i<items.length(); i++) {
             JSONObject itemJson = items.getJSONObject(i);
-            ProductDto productDto = new ProductDto(itemJson);
+            ProductRequestDto productDto = new ProductRequestDto(itemJson);
             productDtos.add(productDto);
         }
         return productDtos;
