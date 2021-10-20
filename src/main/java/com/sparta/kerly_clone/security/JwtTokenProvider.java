@@ -6,6 +6,7 @@ import com.sparta.kerly_clone.exception.TokenNullException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.StringJoiner;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
@@ -64,9 +66,9 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-        System.out.println("============getAuthentication===========");
-        System.out.println(userDetails);
-        System.out.println("============getAuthentication===========");
+        log.info("============getAuthentication===========");
+        log.info("username={}, password={}",userDetails.getUsername(), userDetails.getPassword());
+        log.info("============getAuthentication===========");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -83,6 +85,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String jwtToken) {
         if (jwtToken == null) {
+            log.info("토큰이 존재하지 않습니다.");
             throw new TokenNullException("토큰이 존재하지 않습니다.");
         }
         try {
@@ -91,6 +94,7 @@ public class JwtTokenProvider {
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+            log.info("정상적인 토큰이 아닙니다.");
             throw new InvalidTokenException("정상적인 토큰이 아닙니다.");
         }
     }
