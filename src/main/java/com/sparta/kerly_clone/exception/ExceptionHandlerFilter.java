@@ -36,6 +36,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         PrintWriter out = response.getWriter();
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
         //출력
         out.print(jsonString);
