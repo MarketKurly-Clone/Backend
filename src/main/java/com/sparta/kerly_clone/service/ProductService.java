@@ -24,7 +24,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final String CLIENT_ID = "BASnL9Xwv5SS9_mW0ZpV";
     private final String CLIENT_SECRET = "GLCkxasRD7";
-    private final String OpenApiNaverShopUrl = "https://openapi.naver.com/v1/search/shop.json?query=";
+    private final String OpenApiNaverShopUrl = "https://openapi.naver.com/v1/search/shop.json?display=50&query=";
     int display = 20; //1차 프레임에서는 20으로 고정
     int start = 0; // 1차 프레임에서는 0으로 고정
     public Page<Product> getProducts(String category1, String category2, String keyword) {
@@ -63,7 +63,7 @@ public class ProductService {
     public List<ProductRequestDto> fromJSONtoItems(String result) {
         JSONObject json = new JSONObject(result);
 //        start = json.getInt("start"); 2차 프레임시 사용 예정
-//        display = json.getInt("display"); 2차 프레임시 사용 예정
+        display = json.getInt("display"); //2차 프레임시 사용 예정
         JSONArray items = json.getJSONArray("items");
         List<ProductRequestDto> productDtos = new ArrayList<>();
         for(int i=0; i<items.length(); i++) {
