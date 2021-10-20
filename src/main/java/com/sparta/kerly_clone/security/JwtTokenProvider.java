@@ -83,8 +83,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String jwtToken) {
         if (jwtToken == null) {
-            return false;
-//            throw new TokenNullException("토큰이 존재하지 않습니다.");
+            throw new TokenNullException("토큰이 존재하지 않습니다.");
         }
         try {
             JwtParser parser = Jwts.parserBuilder().setSigningKey(getSigninKey()).build();
@@ -92,8 +91,7 @@ public class JwtTokenProvider {
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
-            return false;
-//            throw new InvalidTokenException("정상적인 토큰이 아닙니다.");
+            throw new InvalidTokenException("정상적인 토큰이 아닙니다.");
         }
     }
 }

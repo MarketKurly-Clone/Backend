@@ -9,6 +9,7 @@ import com.sparta.kerly_clone.model.User;
 import com.sparta.kerly_clone.security.UserDetailsImpl;
 import com.sparta.kerly_clone.service.ReviewService;
 import com.sparta.kerly_clone.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -29,6 +31,7 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     public ResponseDto createReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("GET, '/products', productId={}, title={}, content={}", requestDto.getProductId(),requestDto.getTitle(), requestDto.getContent());
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }

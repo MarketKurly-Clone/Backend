@@ -34,6 +34,7 @@ public class User {
     private List<Review> reviewList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Cart> cartList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
