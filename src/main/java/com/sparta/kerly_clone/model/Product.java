@@ -48,7 +48,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
 
-    public Product(String name, Long price, String description, int unit, String delivery, String category1, String category2, String image,int viewCount) {
+    public Product(String name, Long price, String description, int unit, String delivery, String category1, String category2, String image, int viewCount) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -58,9 +58,5 @@ public class Product {
         this.category1 = category1;
         this.category2 = category2;
         this.viewCount = viewCount;
-    }
-
-    public void deleteReview(Review review) {
-        this.reviews.remove(review);
     }
 }

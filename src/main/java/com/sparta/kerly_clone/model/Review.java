@@ -1,5 +1,6 @@
 package com.sparta.kerly_clone.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.kerly_clone.dto.requestDto.ReviewRequestDto;
 import com.sparta.kerly_clone.util.Timestamped;
 import com.sun.istack.NotNull;
@@ -7,13 +8,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 public class Review extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;
 
@@ -23,6 +26,7 @@ public class Review extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
     @NotNull
@@ -31,8 +35,11 @@ public class Review extends Timestamped {
     @NotNull
     private String content;
 
-    @Column(columnDefinition = "long default 0L")
     private Long likedCount;
+
+    @OneToMany(mappedBy = "review")
+    @JsonIgnore
+    private List<Liked> likedList = new ArrayList<>();
 
     public Review(ReviewRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
@@ -44,5 +51,18 @@ public class Review extends Timestamped {
     public void addReview(Product product) {
         this.product = product;
         product.getReviews().add(this);
+    }
+
+    public void deleteReview() {
+        this.user.getReviewList().remove(this);
+        this.product.getReviews().remove(this);
+    }
+
+    public void plusCountLiked() {
+        this.likedCount += 1;
+    }
+
+    public void minusCountLiked() {
+        this.likedCount -= 1;
     }
 }

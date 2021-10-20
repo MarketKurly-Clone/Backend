@@ -13,14 +13,14 @@ import org.springframework.web.client.RestTemplate;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final RestTemplate restTemplate;
+//    private final RestTemplate restTemplate;
     private final String CLIENT_ID = "BASnL9Xwv5SS9_mW0ZpV";
     private final String CLIENT_SECRET = "GLCkxasRD7";
     private final String OpenNaverMovieUrl_getMovies = "https://openapi.naver.com/v1/search/movie.json?query={keyword}";
 
     public Page<Product> getProducts(String keyword) {
 
-        if( productRepository.findAll().size() == 0 ) {
+        if (productRepository.findAll().size() == 0) {
             getProductsFromApi(keyword);
         }
 
