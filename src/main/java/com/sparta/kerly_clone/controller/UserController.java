@@ -11,9 +11,11 @@ import com.sparta.kerly_clone.security.JwtTokenProvider;
 import com.sparta.kerly_clone.security.UserDetailsImpl;
 import com.sparta.kerly_clone.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -24,6 +26,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseDto createUser(@RequestBody SignupRequestDto signupRequestDto) {
+        log.info("POST, '/user/register', email={}, password={}, username={}",
+                signupRequestDto.getEmail(),signupRequestDto.getPassword(), signupRequestDto.getUsername());
         String result = "";
         String msg = "";
         if (userService.registerUser(signupRequestDto)) {
@@ -35,6 +39,7 @@ public class UserController {
 
     @GetMapping("/register")
     public ResponseDto dupCheckEmail(@RequestParam String email) {
+        log.info("GET, '/user/register', email={}", email);
         String result = "";
         String msg = "";
         if (userService.checkDupEmail(email)) {
@@ -46,6 +51,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseDto login(@RequestBody UserRequestDto userRequestDto) {
+        log.info("POST, '/user/login', email={}, password={}", userRequestDto.getEmail(), userRequestDto.getPassword());
         User user = userService.loginValideCheck(userRequestDto);
         String token = userService.createToken(userRequestDto);
         LoginResDto loginResDto = LoginResDto.builder().token(token).user(user).build();
@@ -54,6 +60,7 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseDto getUserInfoFromToken(@RequestHeader(value = "authorization") String token) {
+        log.info("GET, '/user/info', token={}", token);
         if (jwtTokenProvider.validateToken(token)) {
             return new ResponseDto("success", "유저정보를 성공적으로 불러왔습니다.", getLoginResDtoFromToken(token));
         } else
@@ -66,6 +73,7 @@ public class UserController {
         if (principal instanceof UserDetailsImpl) {
             return getLoginResDtoFromPrincipal((UserDetailsImpl) principal, token);
         } else {
+            log.info("유효하지 않은 토큰입니다.");
             throw new UnauthenticatedException("유효하지 않은 토큰입니다.");
         }
     }
