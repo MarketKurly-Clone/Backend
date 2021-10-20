@@ -1,5 +1,6 @@
 package com.sparta.kerly_clone.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.kerly_clone.dto.requestDto.ProductRequestDto;
 import lombok.*;
 
@@ -50,6 +51,7 @@ public class Product {
     private int viewCount;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Review> reviews;
 
     public Product(String name, Long price, String description, int unit, String delivery, String category1, String category2, String image,int viewCount) {

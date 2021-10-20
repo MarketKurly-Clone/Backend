@@ -31,14 +31,13 @@ public class Cart {
 
     public void addProductAmount(Long amount) {
         this.amount += amount;
-        this.addedAt = LocalDateTime.now();
-        user.getCartList().add(this);
     }
 
     public void addNewProduct(Product product, Long amount, User user) {
         this.product = product;
         this.amount = amount;
         this.user = user;
+        this.addedAt = LocalDateTime.now();
         user.getCartList().add(this);
     }
 

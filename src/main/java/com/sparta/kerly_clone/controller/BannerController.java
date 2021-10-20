@@ -1,6 +1,7 @@
 package com.sparta.kerly_clone.controller;
 
 import com.sparta.kerly_clone.dto.responseDto.ResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,10 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class BannerController {
 
     @GetMapping("/banners")
     public ResponseDto getBanner() {
+        log.info("GET, '/banners'");
         Map<String, Object> responseMap = new HashMap<>();
         List<String> banners = new ArrayList<>();
         banners.add("https://img-cf.kurly.com/shop/data/main/1/pc_img_1634523002.jpg");

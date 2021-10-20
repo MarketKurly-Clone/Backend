@@ -7,6 +7,7 @@ import com.sparta.kerly_clone.model.User;
 import com.sparta.kerly_clone.security.UserDetailsImpl;
 import com.sparta.kerly_clone.service.LikedService;
 import com.sparta.kerly_clone.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 public class LikedController {
 
     private final LikedService likedService;
@@ -27,6 +29,7 @@ public class LikedController {
 
     @PostMapping("liked")
     public ResponseDto liked(@RequestBody LikeRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("POST, '/liked', reviewId={}", requestDto.getReviewId());
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }

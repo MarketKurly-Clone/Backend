@@ -5,6 +5,7 @@ import com.sparta.kerly_clone.exception.EmptyException;
 import com.sparta.kerly_clone.model.Product;
 import com.sparta.kerly_clone.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
