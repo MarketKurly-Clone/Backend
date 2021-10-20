@@ -1,19 +1,25 @@
 package com.sparta.kerly_clone.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
-@Data
+@NoArgsConstructor
+@Getter
 public class ProductDto {
+    private String title;
+    private Long price;
+    private String description;
+    private String category1;
+    private String category2;
+    private String image;
 
-    private int display;
-    private Item[] items;
-
-    @Data
-    static class Item {
-        public String title;
-        public String image;
-        public int lprice;
-        public String category1;
-        public String category2;
+    public ProductDto(JSONObject itemJson) {
+        this.title = itemJson.getString("title");
+        this.price = itemJson.getLong("lprice");
+        this.description = itemJson.getString("category3") +itemJson.getString("mallName")+itemJson.getString("maker");
+        this.category1="";
+        this.category2="";
+        this.image = itemJson.getString("image");
     }
 }

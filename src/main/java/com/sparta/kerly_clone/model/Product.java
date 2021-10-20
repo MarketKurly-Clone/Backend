@@ -1,5 +1,6 @@
 package com.sparta.kerly_clone.model;
 
+import com.sparta.kerly_clone.dto.ProductDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,6 +44,9 @@ public class Product {
     private String image;
 
     @Column
+    private String type;
+
+    @Column
     private int viewCount;
 
     @OneToMany(mappedBy = "product")
@@ -60,6 +64,17 @@ public class Product {
         this.viewCount = viewCount;
     }
 
+    public Product(ProductDto productDto) {
+        this.name = productDto.getTitle();
+        this.price = productDto.getPrice();
+        this.description = productDto.getDescription();
+        this.unit = 1;
+        this.delivery = "샛별배송/택배배송";
+        this.image = productDto.getImage();
+        this.category1 = productDto.getCategory1();
+        this.category2 = productDto.getCategory2();
+        this.viewCount = 0;
+    }
     public void deleteReview(Review review) {
         this.reviews.remove(review);
     }
