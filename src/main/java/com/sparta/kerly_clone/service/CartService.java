@@ -31,7 +31,7 @@ public class CartService {
     @Transactional
     public Long addProduct(CartRequestDto requestDto, User user) {
         Product product = loadProduct(requestDto.getProductId());
-        Cart cart = cartRepository.findByUserIdAndProduct(user.getId(), product).orElse(null);
+        Cart cart = cartRepository.findByUserIdAndProductId(user.getId(), requestDto.getProductId()).orElse(null);
         if (cart == null) {
             cart = new Cart();
             cart.addNewProduct(product, requestDto.getAmount(), user);
@@ -52,5 +52,14 @@ public class CartService {
         List<ProductResponseDto> responseDtoList = cartRepository.findAllByUserOrderByAddedAtDesc(user).stream().map(ProductResponseDto::new).collect(Collectors.toCollection(ArrayList::new));
         Long itemCount = cartRepository.countByUser(user);
         return new CartResponseDto(responseDtoList, itemCount);
+    }
+
+    @Transactional
+    public void deleteCart(User user, Long productId) {
+        Cart cart = cartRepository.findByUserIdAndProductId(user.getId(), productId).orElseThrow(
+                () -> new NoItemException("장바구니에서 해당 상품을 찾을 수 없습니다.")
+        );
+        cart.deleteCart();
+        cartRepository.delete(cart);
     }
 }

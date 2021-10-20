@@ -26,7 +26,7 @@ public class UserController {
     public ResponseDto createUser(@RequestBody SignupRequestDto signupRequestDto) {
         String result = "";
         String msg = "";
-        if(userService.registerUser(signupRequestDto)) {
+        if (userService.registerUser(signupRequestDto)) {
             result = "success";
             msg = "성공적으로 회원가입되었습니다.";
         }
@@ -37,7 +37,7 @@ public class UserController {
     public ResponseDto dupCheckEmail(@RequestParam String email) {
         String result = "";
         String msg = "";
-        if(userService.checkDupEmail(email)){
+        if (userService.checkDupEmail(email)) {
             result = "success";
             msg = "사용가능한 아이디입니다.";
         }
@@ -46,25 +46,24 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseDto login(@RequestBody UserRequestDto userRequestDto) {
-        String token = userService.createToken(userRequestDto);
         User user = userService.loginValideCheck(userRequestDto);
+        String token = userService.createToken(userRequestDto);
         LoginResDto loginResDto = LoginResDto.builder().token(token).user(user).build();
         return new ResponseDto("success", "로그인에 성공하였습니다.", loginResDto);
     }
 
     @GetMapping("/info")
-    public ResponseDto getUserInfoFromToken(@RequestHeader(value="authorization") String token) {
-        if(jwtTokenProvider.validateToken(token)) {
+    public ResponseDto getUserInfoFromToken(@RequestHeader(value = "authorization") String token) {
+        if (jwtTokenProvider.validateToken(token)) {
             return new ResponseDto("success", "유저정보를 성공적으로 불러왔습니다.", getLoginResDtoFromToken(token));
-        }
-        else
+        } else
             throw new JwtTokenExpiredException("토큰이 만료되었습니다.");
     }
 
     private LoginResDto getLoginResDtoFromToken(String token) {
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
         Object principal = authentication.getPrincipal();
-        if ( principal instanceof UserDetailsImpl) {
+        if (principal instanceof UserDetailsImpl) {
             return getLoginResDtoFromPrincipal((UserDetailsImpl) principal, token);
         } else {
             throw new UnauthenticatedException("유효하지 않은 토큰입니다.");

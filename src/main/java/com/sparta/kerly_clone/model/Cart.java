@@ -1,5 +1,6 @@
 package com.sparta.kerly_clone.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ public class Cart {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,10 +34,15 @@ public class Cart {
         this.addedAt = LocalDateTime.now();
         user.getCartList().add(this);
     }
+
     public void addNewProduct(Product product, Long amount, User user) {
         this.product = product;
         this.amount = amount;
         this.user = user;
         user.getCartList().add(this);
+    }
+
+    public void deleteCart() {
+        this.user.getCartList().remove(this);
     }
 }

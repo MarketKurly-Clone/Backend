@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 public class ReviewController {
 
@@ -27,7 +29,7 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     public ResponseDto createReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails == null){
+        if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }
         User user = userService.loadUserEamil(userDetails.getUsername());
@@ -36,18 +38,24 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public ResponseDto getReviews(@RequestParam("productId") Long productId, @RequestParam("page") int page, @RequestParam("display") int display) {
-        ReviewListResponseDto responseDto = reviewService.getReviewList(productId, page, display);
+    public ResponseDto getReviews(@RequestParam("productId") Long productId, @RequestParam("page") int page, @RequestParam("display") int display, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        ReviewListResponseDto responseDto;
+        if (userDetails == null) {
+            responseDto = reviewService.getReviewList(productId, page, display, new User());
+        } else {
+            User user = userService.loadUserEamil(userDetails.getUsername());
+            responseDto = reviewService.getReviewList(productId, page, display, user);
+        }
         return new ResponseDto("success", "성공적으로 댓글이 조회되었습니다.", responseDto);
     }
 
     @DeleteMapping("/reviews")
-    public ResponseDto deleteReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails == null){
+    public ResponseDto deleteReview(@RequestBody Map<String, Long> map, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }
         User user = userService.loadUserEamil(userDetails.getUsername());
-        reviewService.deleteReview(user, requestDto.getProductId(), requestDto.getReviewId());
+        reviewService.deleteReview(user, map.get("reviewId"));
 
         return new ResponseDto("success", "성공적으로 댓글이 삭제되었습니다.", "");
     }

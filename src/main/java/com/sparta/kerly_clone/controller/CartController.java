@@ -3,7 +3,6 @@ package com.sparta.kerly_clone.controller;
 import com.sparta.kerly_clone.dto.requestDto.CartRequestDto;
 import com.sparta.kerly_clone.dto.responseDto.CartResponseDto;
 import com.sparta.kerly_clone.dto.responseDto.ResponseDto;
-import com.sparta.kerly_clone.exception.NoItemException;
 import com.sparta.kerly_clone.exception.NoneLoginException;
 import com.sparta.kerly_clone.model.User;
 import com.sparta.kerly_clone.security.UserDetailsImpl;
@@ -11,10 +10,7 @@ import com.sparta.kerly_clone.service.CartService;
 import com.sparta.kerly_clone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -54,6 +50,13 @@ public class CartController {
         CartResponseDto responseDto = cartService.getCart(user);
 
         return new ResponseDto("success", "성공적으로 조회 되었습니다", responseDto);
+    }
+
+    @DeleteMapping("/cart")
+    public ResponseDto deleteCart(@RequestBody Map<String, Long> map, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userService.loadUserEamil(userDetails.getUsername());
+        cartService.deleteCart(user, map.get("productId"));
+        return new ResponseDto("success", "성공적으로 삭제되었습니다.", "");
     }
 }
 

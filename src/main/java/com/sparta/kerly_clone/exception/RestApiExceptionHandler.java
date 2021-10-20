@@ -12,16 +12,16 @@ public class RestApiExceptionHandler {
             DuplicateUserException.class,
             EmailFormException.class,
             EmptyException.class,
-            InvalidTokenException.class,
             JwtTokenExpiredException.class,
             LengthException.class,
             NoItemException.class,
             TokenNullException.class,
             UnauthenticatedException.class,
-            NoneLoginException.class
+            NoneLoginException.class,
+            UsernameNotFoundException.class
     })
     public ResponseEntity<Object> RestApiExceptionHandle(RuntimeException ex) {
-        ResponseDto restApiException = new ResponseDto("failed",ex.getMessage(),"");
+        ResponseDto restApiException = new ResponseDto("failed", ex.getMessage(), "");
         return new ResponseEntity<>(
                 restApiException,
                 HttpStatus.OK

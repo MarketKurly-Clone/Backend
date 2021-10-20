@@ -41,15 +41,15 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(new Review(requestDto, user));
         savedReview.addReview(product);
 
-        return new ReviewResponseDto(savedReview);
+        return new ReviewResponseDto(savedReview, user);
     }
 
-    public ReviewListResponseDto getReviewList(Long productId, int page, int display) {
+    public ReviewListResponseDto getReviewList(Long productId, int page, int display, User user) {
         Product product = loadProduct(productId);          //product 존재하는지 확인
 
         PageRequest pageRequest = PageRequest.of(page - 1, display, Sort.by("createdAt").descending());
         List<ReviewResponseDto> reviews = reviewRepository.findAllByProduct(product, pageRequest)
-                .stream().map(ReviewResponseDto::new)
+                .stream().map(o -> new ReviewResponseDto(o, user))
                 .collect(Collectors.toCollection(ArrayList::new));
         Long reviewCount = reviewRepository.countByProductId(productId);
 
@@ -57,13 +57,13 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(User user, Long productId, Long reviewId) {
-        Product product = loadProduct(productId);          //product 존재하는지 확인
+    public void deleteReview(User user, Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(
                 () -> new NoItemException("해당 댓글이 존재하지 않습니다.")
         );
+
         if (review.getUser().equals(user)) {
-            product.deleteReview(review);
+            review.deleteReview();
             reviewRepository.delete(review);
         } else {
             throw new UnauthenticatedException("삭제 권한이 없습니다.");

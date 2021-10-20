@@ -16,6 +16,7 @@ public class ProductResponseDto {
     private String description;
     private Long price;
     private int viewCount;
+    private Long amount;
 
     public ProductResponseDto(Cart cart) {
         Product product = cart.getProduct();
@@ -27,5 +28,6 @@ public class ProductResponseDto {
         this.description = product.getDescription();
         this.price = product.getPrice();
         this.viewCount = product.getViewCount();
+        this.amount = cart.getAmount();
     }
 }

@@ -2,11 +2,12 @@ package com.sparta.kerly_clone.dto.responseDto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class ReviewListResponseDto {
     private List<ReviewResponseDto> reviews;
     private Long reviewCount;
