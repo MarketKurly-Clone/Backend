@@ -54,12 +54,13 @@ public class Product {
     @JsonIgnore
     private List<Review> reviews;
 
-    public Product(String name, Long price, String description, int unit, String delivery, String category1, String category2, String image,int viewCount) {
+    public Product(String name, Long price, String description, String category1, String category2, String image, int viewCount) {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.unit = unit;
-        this.delivery = delivery;
+        this.unit = 1;
+        this.type = "상온/종이포장";
+        this.delivery = "샛별배송/택배배송";
         this.image = image;
         this.category1 = category1;
         this.category2 = category2;
@@ -71,13 +72,11 @@ public class Product {
         this.price = productDto.getPrice();
         this.description = productDto.getDescription();
         this.unit = 1;
+        this.type = "상온/종이포장";
         this.delivery = "샛별배송/택배배송";
         this.image = productDto.getImage();
         this.category1 = productDto.getCategory1();
         this.category2 = productDto.getCategory2();
         this.viewCount = 0;
-    }
-    public void deleteReview(Review review) {
-        this.reviews.remove(review);
     }
 }

@@ -31,7 +31,7 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     public ResponseDto createReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        log.info("GET, '/products', productId={}, title={}, content={}", requestDto.getProductId(),requestDto.getTitle(), requestDto.getContent());
+        log.info("POST, '/reviews', productId={}, title={}, content={}", requestDto.getProductId(), requestDto.getTitle(), requestDto.getContent());
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }
@@ -42,6 +42,7 @@ public class ReviewController {
 
     @GetMapping("/reviews")
     public ResponseDto getReviews(@RequestParam("productId") Long productId, @RequestParam("page") int page, @RequestParam("display") int display, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("GET, '/reviews', productId={}, page={}, display={}", productId, page, display);
         ReviewListResponseDto responseDto;
         if (userDetails == null) {
             responseDto = reviewService.getReviewList(productId, page, display, new User());
@@ -54,6 +55,7 @@ public class ReviewController {
 
     @DeleteMapping("/reviews")
     public ResponseDto deleteReview(@RequestBody Map<String, Long> map, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("DELETE, '/reviews', reviewId={}", map.get("reviewId"));
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }
