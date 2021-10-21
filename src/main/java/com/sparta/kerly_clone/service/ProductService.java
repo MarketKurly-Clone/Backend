@@ -28,11 +28,11 @@ public class ProductService {
     int display = 15; //1차 프레임에서는 20으로 고정
     int start = 0; // 1차 프레임에서는 0으로 고정
 
-    public Page<Product> getProducts(String category1, String category2, String keyword) {
+    public Page<Product> getProducts(String category1, String category2, String keyword, int page) {
 
-        Page<Product> products = productRepository.findAllByQuery(PageRequest.of(start, display), keyword);
+        Page<Product> products = productRepository.findByNameLike(keyword, PageRequest.of(page, display));
         if (products.isEmpty()) {
-            String apiBody = getProductsFromApi(keyword);
+            String apiBody = getProductsFromApi(keyword, page);
             List<ProductRequestDto> productApi = fromJSONtoItems(apiBody);
             products = new PageImpl(productApi, PageRequest.of(start, display), productApi.size());
 
@@ -45,7 +45,7 @@ public class ProductService {
         return products;
     }
 
-    public String getProductsFromApi(String keyword) {
+    public String getProductsFromApi(String keyword, int page) {
         // 네이버 쇼핑 API 호출에 필요한 Header, Body 정리
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -53,8 +53,9 @@ public class ProductService {
         headers.add("X-Naver-Client-Secret", CLIENT_SECRET);
         String body = "";
 
+        start = page == 0? 1 : page * display +1;
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(OpenApiNaverShopUrl + keyword, HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(OpenApiNaverShopUrl + keyword + "&start=" + start, HttpMethod.GET, requestEntity, String.class);
         HttpStatus httpStatus = responseEntity.getStatusCode();
         System.out.println("Response Status : " + httpStatus.value());
         System.out.println(responseEntity.getBody());
@@ -63,8 +64,6 @@ public class ProductService {
 
     public List<ProductRequestDto> fromJSONtoItems(String result) {
         JSONObject json = new JSONObject(result);
-//        start = json.getInt("start"); 2차 프레임시 사용 예정
-//        display = json.getInt("display"); //2차 프레임시 사용 예정
         JSONArray items = json.getJSONArray("items");
         List<ProductRequestDto> productDtos = new ArrayList<>();
         for (int i = 0; i < items.length(); i++) {

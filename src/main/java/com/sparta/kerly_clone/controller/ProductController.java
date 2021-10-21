@@ -21,15 +21,16 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseDto getProductByQuery(@RequestParam String category1
                                     , @RequestParam String category2
-                                    , @RequestParam String query) {
-        log.info("GET, '/products/query', category1={}, category2={}, query={}", category1, category2, query);
+                                    , @RequestParam String query
+                                    , @RequestParam int page) {
+        log.info("GET, '/products/query', category1={}, category2={}, query={}, page={}", category1, category2, query, page);
 
         String paramQuery = query.trim();
         Page<Product> products;
         if(paramQuery.equals(""))
-            products = productService.getProducts(category1,category2, "야채");
+            products = productService.getProducts(category1,category2, "야채", page);
         else
-            products = productService.getProducts(category1,category2, query);
+            products = productService.getProducts(category1,category2, query, page);
         return new ResponseDto("success", "", products);
     }
 
