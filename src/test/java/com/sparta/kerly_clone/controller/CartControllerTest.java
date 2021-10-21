@@ -36,7 +36,7 @@ class CartControllerTest {
                 .username("tester").build();
         mockProduct = Product.builder()
                 .name("상품1")
-                .price(4000)
+                .price(4000L)
                 .description("상품설명")
                 .unit(2)
                 .type("타입 테스트")
