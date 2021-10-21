@@ -27,7 +27,7 @@ public class SignupValidator {
         String username = signupRequestDto.getUsername().trim();
         String password = signupRequestDto.getPassword().trim();
         Optional<User> userByEmail = userRepository.findByEmail(email);
-        Optional<User> userByUsername = userRepository.findByUsername(username);
+//        Optional<User> userByUsername = userRepository.findByUsername(username);
         String pattern = "^[a-zA-Z0-9가-힣]*$";
 
         if (userByEmail.isPresent()) {
