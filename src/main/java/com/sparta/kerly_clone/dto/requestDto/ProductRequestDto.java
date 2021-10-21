@@ -1,10 +1,12 @@
 package com.sparta.kerly_clone.dto.requestDto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class ProductRequestDto {
     private String title;

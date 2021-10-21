@@ -53,7 +53,7 @@ public class ReviewService {
                 .collect(Collectors.toCollection(ArrayList::new));
         Long reviewCount = reviewRepository.countByProductId(productId);
 
-        return new ReviewListResponseDto(reviews, reviewCount);
+        return new ReviewListResponseDto(reviews, reviewCount, page, display);
     }
 
     @Transactional

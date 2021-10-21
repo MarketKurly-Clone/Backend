@@ -24,7 +24,7 @@ public class RestApiExceptionHandler {
         ResponseDto restApiException = new ResponseDto("failed", ex.getMessage(), "");
         return new ResponseEntity<>(
                 restApiException,
-                HttpStatus.OK
+                HttpStatus.BAD_REQUEST
         );
     }
 }
