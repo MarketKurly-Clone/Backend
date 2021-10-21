@@ -29,18 +29,18 @@ public class ProductService {
     int start = 0; // 1차 프레임에서는 0으로 고정
 
     public Page<Product> getProducts(String category1, String category2, String keyword, int page) {
-
-        page -= 1;
-        Page<Product> products = productRepository.findByNameLike(keyword, PageRequest.of(page, display));
+        page -=1;
+        Page<Product> products = productRepository.findByNameLike("%keyword%", PageRequest.of(page, display));
         if (products.isEmpty()) {
             String apiBody = getProductsFromApi(keyword, page);
             List<ProductRequestDto> productApi = fromJSONtoItems(apiBody);
-            products = new PageImpl(productApi, PageRequest.of(start, display), productApi.size());
+//            products = new PageImpl<>(productApi, PageRequest.of(page, display), display);
 
             List<Product> productList = new ArrayList<>();
             for (ProductRequestDto productDto : productApi) {
                 productList.add(new Product(productDto));
             }
+            products = new PageImpl<>(productList, PageRequest.of(page, display), display);
             productRepository.saveAll(productList);
         }
         return products;
