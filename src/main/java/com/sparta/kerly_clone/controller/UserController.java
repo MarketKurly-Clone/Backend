@@ -52,7 +52,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseDto login(@RequestBody UserRequestDto userRequestDto) {
         log.info("POST, '/user/login', email={}, password={}", userRequestDto.getEmail(), userRequestDto.getPassword());
-        User user = userService.loginValideCheck(userRequestDto);
+        User user = userService.loginValidCheck(userRequestDto);
         String token = userService.createToken(userRequestDto);
         LoginResDto loginResDto = LoginResDto.builder().token(token).user(user).build();
         return new ResponseDto("success", "로그인에 성공하였습니다.", loginResDto);

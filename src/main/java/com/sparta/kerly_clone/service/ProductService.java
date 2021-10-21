@@ -29,10 +29,8 @@ public class ProductService {
     int start = 0; // 1차 프레임에서는 0으로 고정
 
     public Page<Product> getProducts(String category1, String category2, String keyword, int page) {
-
         page -=1;
         Page<Product> products = productRepository.findByNameLike("%keyword%", PageRequest.of(page, display));
-
         if (products.isEmpty()) {
             String apiBody = getProductsFromApi(keyword, page);
             List<ProductRequestDto> productApi = fromJSONtoItems(apiBody);
@@ -56,7 +54,7 @@ public class ProductService {
         headers.add("X-Naver-Client-Secret", CLIENT_SECRET);
         String body = "";
 
-        start = page == 0? 1 : page * display +1;
+        start = page == 0 ? 1 : page * display + 1;
         HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(OpenApiNaverShopUrl + keyword + "&start=" + start, HttpMethod.GET, requestEntity, String.class);
         HttpStatus httpStatus = responseEntity.getStatusCode();

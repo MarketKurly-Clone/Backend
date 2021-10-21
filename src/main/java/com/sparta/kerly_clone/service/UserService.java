@@ -42,7 +42,7 @@ public class UserService {
         return jwtTokenProvider.createToken(authentication);
     }
 
-    public User loginValideCheck(UserRequestDto userRequestDto) {
+    public User loginValidCheck(UserRequestDto userRequestDto) {
 
         String email = userRequestDto.getEmail().trim();
         String password = userRequestDto.getPassword().trim();
