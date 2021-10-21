@@ -40,7 +40,7 @@ public class ProductService {
             for (ProductRequestDto productDto : productApi) {
                 productList.add(new Product(productDto));
             }
-            products = new PageImpl<>(productList, PageRequest.of(page, display), display);
+            products = new PageImpl<>(productList.subList(0, 15), PageRequest.of(page, display), display);
             productRepository.saveAll(productList);
         }
         return products;

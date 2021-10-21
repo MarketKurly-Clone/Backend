@@ -2,15 +2,15 @@ package com.sparta.kerly_clone.controller;
 
 import com.sparta.kerly_clone.filter.MockSpringSecurityFilter;
 import com.sparta.kerly_clone.model.Product;
-import com.sparta.kerly_clone.repository.ProductRepository;
 import com.sparta.kerly_clone.security.JwtAuthenticationFilter;
 import com.sparta.kerly_clone.security.WebSecurityConfig;
 import com.sparta.kerly_clone.service.ProductService;
+import org.assertj.core.api.Assertions;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,21 +18,18 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,8 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         }
 )
 class ProductControllerTest {
-    private Principal mockPrincipal;
-
     @Autowired
     private WebApplicationContext context;
 
@@ -67,6 +62,7 @@ class ProductControllerTest {
     public void setup() {
         mvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(springSecurity(new MockSpringSecurityFilter()))
+                .addFilters(new CharacterEncodingFilter("UTF-8",true))
                 .build();
 
         mockProductSetup();
@@ -92,20 +88,40 @@ class ProductControllerTest {
     @DisplayName("상품 리스트 조회")
     void test1() throws Exception {
         // given
-        MultiValueMap<String, String> signupRequestForm = new LinkedMultiValueMap<>();
-        signupRequestForm.add("category1", "");
-        signupRequestForm.add("category2", "");
-        signupRequestForm.add("query", "");
-        signupRequestForm.add("page", "1");
+        MultiValueMap<String, String> getProductsForm = new LinkedMultiValueMap<>();
+        getProductsForm.add("category1", "");
+        getProductsForm.add("category2", "");
+        getProductsForm.add("query", "");
+        getProductsForm.add("page", "1");
 
         when(productService.getProducts("", "", "스테이크", 1)).thenReturn(products);
         // when - then
-        ResultActions resultActions = mvc.perform(get("/products")
-                        .params(signupRequestForm)
+        MvcResult mvcResult = mvc.perform(get("/products")
+                        .params(getProductsForm)
                 )
-                .andDo(print());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+        JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
+        JSONArray items = jsonObject.getJSONObject("data").getJSONArray("content");
+        Assertions.assertThat(items.length()).isEqualTo(5);
+    }
+
+    @Test
+    @DisplayName("상품 상세 조회")
+    void 상품상세조회() throws Exception {
+        //given
+        when(productService.getProduct(1L)).thenReturn(products.getContent().get(0));
+        //when
+        MvcResult mvcResult = mvc.perform(get("/products/" + 1 ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
+                .andDo(print())
+                .andReturn();
+        //then
+        JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
+        JSONObject item = jsonObject.getJSONObject("data");
+        Assertions.assertThat(item.getString("name")).isEqualTo("고구마");
     }
 }
