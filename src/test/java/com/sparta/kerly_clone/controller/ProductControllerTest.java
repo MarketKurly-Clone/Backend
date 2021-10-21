@@ -98,7 +98,7 @@ class ProductControllerTest {
         signupRequestForm.add("query", "");
         signupRequestForm.add("page", "1");
 
-        when(productService.getProducts("", "", "스테이크", 0)).thenReturn(products);
+        when(productService.getProducts("", "", "스테이크", 1)).thenReturn(products);
         // when - then
         ResultActions resultActions = mvc.perform(get("/products")
                         .params(signupRequestForm)
