@@ -30,6 +30,7 @@ public class ProductService {
 
     public Page<Product> getProducts(String category1, String category2, String keyword, int page) {
 
+        page -= page;
         Page<Product> products = productRepository.findByNameLike(keyword, PageRequest.of(page, display));
         if (products.isEmpty()) {
             String apiBody = getProductsFromApi(keyword, page);
