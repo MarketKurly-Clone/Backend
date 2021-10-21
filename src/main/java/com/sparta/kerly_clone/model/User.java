@@ -1,6 +1,7 @@
 package com.sparta.kerly_clone.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.kerly_clone.dto.requestDto.SignupRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,8 +42,9 @@ public class User {
     @JsonIgnore
     private List<Liked> likedList = new ArrayList<>();
 
-    public User(String email, String username) {
-        this.email = email;
-        this.username = username;
+    public User(SignupRequestDto signupRequestDto) {
+        this.email = signupRequestDto.getEmail();
+        this.username = signupRequestDto.getUsername();
+        this.password = signupRequestDto.getPassword();
     }
 }

@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @Slf4j
 public class ReviewController {
@@ -53,14 +51,14 @@ public class ReviewController {
         return new ResponseDto("success", "성공적으로 댓글이 조회되었습니다.", responseDto);
     }
 
-    @DeleteMapping("/reviews")
-    public ResponseDto deleteReview(@RequestBody Map<String, Long> map, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        log.info("DELETE, '/reviews', reviewId={}", map.get("reviewId"));
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseDto deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("DELETE, '/reviews', reviewId={}", reviewId);
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
         }
         User user = userService.loadUserEamil(userDetails.getUsername());
-        reviewService.deleteReview(user, map.get("reviewId"));
+        reviewService.deleteReview(user, reviewId);
 
         return new ResponseDto("success", "성공적으로 댓글이 삭제되었습니다.", "");
     }

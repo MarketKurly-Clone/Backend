@@ -19,11 +19,20 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/products")
-    public ResponseDto getProducts(@RequestParam String category1, @RequestParam String category2) {
-        log.info("GET, '/products', category1={}, category2={}", category1, category2);
-        Page<Product> products = productService.getProducts(category1, category2, "야채");
+    public ResponseDto getProductByQuery(@RequestParam String category1
+                                    , @RequestParam String category2
+                                    , @RequestParam String query) {
+        log.info("GET, '/products/query', category1={}, category2={}, query={}", category1, category2, query);
+
+        String paramQuery = query.trim();
+        Page<Product> products;
+        if(paramQuery.equals(""))
+            products = productService.getProducts(category1,category2, "야채");
+        else
+            products = productService.getProducts(category1,category2, query);
         return new ResponseDto("success", "", products);
     }
+
 
     @GetMapping("/products/{productId}")
     public ResponseDto getProduct(@PathVariable Long productId) {

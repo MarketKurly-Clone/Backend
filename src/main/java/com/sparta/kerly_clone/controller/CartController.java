@@ -56,11 +56,11 @@ public class CartController {
         return new ResponseDto("success", "성공적으로 조회 되었습니다", responseDto);
     }
 
-    @DeleteMapping("/cart")
-    public ResponseDto deleteCart(@RequestBody Map<String, Long> map, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        log.info("DELETE, '/cart', productId={}", map.get("productId"));
+    @DeleteMapping("/cart/{productId}")
+    public ResponseDto deleteCart(@PathVariable Long productId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("DELETE, '/cart', productId={}", productId);
         User user = userService.loadUserEamil(userDetails.getUsername());
-        cartService.deleteCart(user, map.get("productId"));
+        cartService.deleteCart(user, productId);
         return new ResponseDto("success", "성공적으로 삭제되었습니다.", "");
     }
 }

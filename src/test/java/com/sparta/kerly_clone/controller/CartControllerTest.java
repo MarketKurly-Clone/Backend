@@ -1,5 +1,7 @@
 package com.sparta.kerly_clone.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.kerly_clone.dto.requestDto.CartRequestDto;
 import com.sparta.kerly_clone.model.Product;
 import com.sparta.kerly_clone.model.User;
 import com.sparta.kerly_clone.security.WebSecurityConfig;
@@ -22,6 +24,9 @@ class CartControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private CartService cartService;
 
@@ -42,8 +47,8 @@ class CartControllerTest {
                 .type("타입 테스트")
                 .delivery("택배")
                 .image("테스트 이미지")
-                .category1(1)
-                .category2(2)
+                .category1("1")
+                .category2("2")
                 .viewCount(3).build();
     }
 
@@ -51,6 +56,7 @@ class CartControllerTest {
     @WithUserDetails
     @DisplayName("장바구니 추가 확인 _ 성공")
     void addCartNormal() {
+        CartRequestDto cartRequestDto = new CartRequestDto();
 
     }
 

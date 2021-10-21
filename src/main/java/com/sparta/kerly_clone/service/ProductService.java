@@ -30,7 +30,7 @@ public class ProductService {
 
     public Page<Product> getProducts(String category1, String category2, String keyword) {
 
-        Page<Product> products = productRepository.findAll(PageRequest.of(start, display));
+        Page<Product> products = productRepository.findAllByQuery(PageRequest.of(start, display), keyword);
         if (products.isEmpty()) {
             String apiBody = getProductsFromApi(keyword);
             List<ProductRequestDto> productApi = fromJSONtoItems(apiBody);
