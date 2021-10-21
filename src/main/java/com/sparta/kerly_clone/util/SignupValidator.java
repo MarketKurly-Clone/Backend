@@ -2,7 +2,10 @@ package com.sparta.kerly_clone.util;
 
 
 import com.sparta.kerly_clone.dto.requestDto.SignupRequestDto;
-import com.sparta.kerly_clone.exception.*;
+import com.sparta.kerly_clone.exception.DuplicateUserException;
+import com.sparta.kerly_clone.exception.EmailFormException;
+import com.sparta.kerly_clone.exception.EmptyException;
+import com.sparta.kerly_clone.exception.LengthException;
 import com.sparta.kerly_clone.model.User;
 import com.sparta.kerly_clone.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +30,6 @@ public class SignupValidator {
         String username = signupRequestDto.getUsername().trim();
         String password = signupRequestDto.getPassword().trim();
         Optional<User> userByEmail = userRepository.findByEmail(email);
-        Optional<User> userByUsername = userRepository.findByUsername(username);
         String pattern = "^[a-zA-Z0-9가-힣]*$";
 
         if (userByEmail.isPresent()) {
