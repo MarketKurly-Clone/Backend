@@ -48,7 +48,7 @@ class ProductServiceTest {
         Mockito.when(productRepository.findAll(PageRequest.of(start, display))).thenReturn(products);
 
         //when
-        Page<Product> result = productService.getProducts("", "", "");
+        Page<Product> result = productService.getProducts("", "", "", 0);
         //then
         assertEquals(result.getContent().get(0).getName(), "product1");
         assertEquals(result.getContent().get(0).getPrice(), 10000L);

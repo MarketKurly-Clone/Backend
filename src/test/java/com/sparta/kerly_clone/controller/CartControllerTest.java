@@ -8,6 +8,7 @@ import com.sparta.kerly_clone.security.WebSecurityConfig;
 import com.sparta.kerly_clone.service.CartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -52,13 +53,39 @@ class CartControllerTest {
                 .viewCount(3).build();
     }
 
-    @Test
-    @WithUserDetails
-    @DisplayName("장바구니 추가 확인 _ 성공")
-    void addCartNormal() {
-        CartRequestDto cartRequestDto = new CartRequestDto();
+    @Nested
+    @DisplayName("장바구니 추가")
+    class addCart {
+
+        @Nested
+        @DisplayName("성공")
+        class addCartSuccess {
+            @Test
+            @WithUserDetails
+            void addCartNormal() {
+                CartRequestDto cartRequestDto = new CartRequestDto();
+//                given();
+
+            }
+        }
+
+        @Nested
+        @DisplayName("실패")
+        class addCartFail {
+            @Test
+            @WithUserDetails
+            @DisplayName("실패_로그인 사용자만 이용할 수 있습니다.")
+//        NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
+//        UsernameNotFoundException("로그인 정보가 존재하지 않습니다.")
+//        NoItemException("해당 상품이 존재하지 않습니다.")
+            void addCartError_PossibleOnlyLogin() {
+                CartRequestDto cartRequestDto = new CartRequestDto();
+
+            }
+        }
 
     }
+
 
 
 
