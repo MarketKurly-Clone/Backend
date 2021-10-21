@@ -379,8 +379,34 @@ class UserServiceTest {
     }
 
     @Nested
-    @DisplayName("로그인확인")
-    class LoginCheck {
+    @DisplayName("유저정보 불러오기")
+    class LoadUser {
+        @Test
+        @DisplayName("이메일이 존재하지 않으면 예외 발생")
+        void 유저정보불러오기예외() {
+            SignupRequestDto signupRequestDto = new SignupRequestDto("user@mail.com", "password486", "user");
+            UserRequestDto userRequestDto = new UserRequestDto("username@mail.com", "password486");
 
+            Mockito.when(userRepository.findByEmail(userRequestDto.getEmail()))
+                    .thenReturn(Optional.empty());
+
+            assertThrows(UsernameNotFoundException.class,() -> userService.loadUserEamil(userRequestDto.getEmail()),"로그인 정보가 존재하지 않습니다.");
+        }
+        @Test
+        @DisplayName("이메일이 존재하면 유저정보를 정상적으로 불러온다")
+        void 유저정보불러오기() {
+            SignupRequestDto signupRequestDto = new SignupRequestDto("user@mail.com", "password486", "user");
+            User user = new User(signupRequestDto);
+
+            UserRequestDto userRequestDto = new UserRequestDto("username@mail.com", "password486");
+
+            Mockito.when(userRepository.findByEmail(userRequestDto.getEmail()))
+                    .thenReturn(Optional.of(user));
+
+            User result = userService.loadUserEamil(userRequestDto.getEmail());
+
+            assertThat(result.getUsername()).isEqualTo(signupRequestDto.getUsername());
+            assertThat(result.getEmail()).isEqualTo(signupRequestDto.getEmail());
+        }
     }
 }
