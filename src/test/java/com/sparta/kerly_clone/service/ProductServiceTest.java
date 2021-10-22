@@ -45,7 +45,7 @@ class ProductServiceTest {
         }
         Page<Product> products = new PageImpl<>(productList,PageRequest.of(start, display), productList.size());
         ProductService productService = new ProductService(productRepository);
-        Mockito.when(productRepository.findByNameLike("", PageRequest.of(start, display))).thenReturn(products);
+        Mockito.when(productRepository.findByNameLike("%%", PageRequest.of(start, display))).thenReturn(products);
         //when
         Page<Product> result = productService.getProducts("", "", "", 1);
         //then

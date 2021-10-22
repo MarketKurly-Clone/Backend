@@ -23,7 +23,7 @@ public class ProductController {
                                     , @RequestParam String category2
                                     , @RequestParam String query
                                     , @RequestParam int page) {
-        log.info("GET, '/products/query', category1={}, category2={}, query={}, page={}", category1, category2, query, page);
+        log.info("GET, '/products', category1={}, category2={}, query={}, page={}", category1, category2, query, page);
 
         String paramQuery = query.trim();
         Page<Product> products;
