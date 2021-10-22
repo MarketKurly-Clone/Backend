@@ -30,16 +30,16 @@ public class SignupValidator {
         String username = signupRequestDto.getUsername().trim();
         String password = signupRequestDto.getPassword().trim();
         Optional<User> userByEmail = userRepository.findByEmail(email);
-        String pattern = "^[a-zA-Z0-9가-힣]*$";
+        String pattern = "(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]*$";
 
-        if (userByEmail.isPresent()) {
+        if (email.equals("") || username.equals("") || password.equals("")) {
+            throw new EmptyException("모든 내용을 입력해주세요.");
+        } else if (userByEmail.isPresent()) {
             throw new DuplicateUserException("이메일이 중복되었습니다.");
         } else if (!isValidEmail(email)) {
             throw new EmailFormException("이메일 형식으로 입력해주세요.");
-        } else if ( (password.length() < 8 || password.length() > 12) && Pattern.matches(pattern, password)) {
+        } else if ( (password.length() < 8 || password.length() > 16) || !Pattern.matches(pattern, password)) {
             throw new LengthException("비밀번호 8~16자리의 영문과 숫자를 조합해주세요.");
-        } else if (email.equals("")||username.equals("")||password.equals("")) {
-            throw new EmptyException("모든 내용을 입력해주세요.");
         }
         // 패스워드 인코딩
         password = passwordEncoder.encode(password);
