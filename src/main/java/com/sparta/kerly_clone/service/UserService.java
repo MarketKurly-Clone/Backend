@@ -25,11 +25,11 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean registerUser(SignupRequestDto signupRequestDto) {
-        User user = signupValidator.validate(signupRequestDto);
-        userRepository.save(user);
-        return true;
-    }
+//    public boolean registerUser(SignupRequestDto signupRequestDto) {
+//        User user = signupValidator.validate(signupRequestDto);
+//        userRepository.save(user);
+//        return true;
+//    }
 
     public boolean checkDupEmail(String email) {
         return signupValidator.validate(email);
@@ -63,5 +63,31 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException("로그인 정보가 존재하지 않습니다.")
         );
+    }
+
+    public boolean registerUser(String email, String password, String username) {
+        User user = signupValidator.validate(new SignupRequestDto(email, password, username));
+        userRepository.save(user);
+        return true;
+    }
+
+    public User loginValidCheck(String email, String password) {
+        if (email.equals("") || password.equals(""))
+            throw new EmptyException("로그인 정보를 모두 입력해주세요.");
+
+        User userEmail = userRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException("회원정보가 일치하지 않습니다. 다시 입력해주세요."));
+
+        if (!passwordEncoder.matches(password, userEmail.getPassword())) {
+            throw new UsernameNotFoundException("회원정보가 일치하지 않습니다. 다시 입력해주세요.");
+        }
+        return userEmail;
+    }
+
+    public String createToken(String email, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(email, password);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        return jwtTokenProvider.createToken(authentication);
     }
 }

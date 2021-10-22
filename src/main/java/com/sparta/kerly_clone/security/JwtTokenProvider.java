@@ -67,7 +67,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
         log.info("============getAuthentication===========");
-        log.info("username={}, password={}",userDetails.getUsername(), userDetails.getPassword());
+        log.info("username={}, password={}", userDetails.getUsername(), userDetails.getPassword());
         log.info("============getAuthentication===========");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
@@ -80,7 +80,10 @@ public class JwtTokenProvider {
 
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("authorization");
+        final String header = request.getHeader("authorization");
+        if (header != null && (header.toLowerCase().indexOf("bearer ") == 0))
+            return header.substring(7);
+        else return header;
     }
 
     public boolean validateToken(String jwtToken) {

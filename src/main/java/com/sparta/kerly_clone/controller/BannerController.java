@@ -1,6 +1,8 @@
 package com.sparta.kerly_clone.controller;
 
 import com.sparta.kerly_clone.dto.responseDto.ResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,8 +14,10 @@ import java.util.Map;
 
 @RestController
 @Slf4j
+@Tag(name = "Banner Controller Api V1")
 public class BannerController {
 
+    @Operation(summary = "배너 조회")
     @GetMapping("/banners")
     public ResponseDto getBanner() {
         log.info("GET, '/banners'");
