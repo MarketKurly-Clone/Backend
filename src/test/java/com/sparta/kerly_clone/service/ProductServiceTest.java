@@ -28,7 +28,7 @@ class ProductServiceTest {
     @DisplayName("상품 리스트 조회")
     void 상품리스트(){
         //given
-        int start = 0;
+        int start = 1;
         int display = 15;
         List<Product> productList = new ArrayList<>();
         for(int i = 0 ;i < 15; i++){
@@ -43,12 +43,12 @@ class ProductServiceTest {
             Product product = new Product(productRequestDto);
             productList.add(product);
         }
-        Page<Product> products = new PageImpl<>(productList,PageRequest.of(start, display), productList.size());
+        Page<Product> products = new PageImpl<>(productList,PageRequest.of(0, display), productList.size());
         ProductService productService = new ProductService(productRepository);
-        Mockito.when(productRepository.findAll(PageRequest.of(start, display))).thenReturn(products);
+        Mockito.when(productRepository.findByNameLike("%%", PageRequest.of(0, display))).thenReturn(products);
 
         //when
-        Page<Product> result = productService.getProducts("", "", "", 0);
+        Page<Product> result = productService.getProducts("", "", "", 1);
         //then
         assertEquals(result.getContent().get(0).getName(), "product1");
         assertEquals(result.getContent().get(0).getPrice(), 10000L);
