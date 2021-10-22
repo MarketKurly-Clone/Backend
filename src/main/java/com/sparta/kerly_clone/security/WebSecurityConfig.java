@@ -40,7 +40,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/h2-console/**");
+                .antMatchers("/h2-console/**")
+                .antMatchers("/v2/api-docs", "/configuration/ui/"
+                ,"/swagger-resources","/configuration/security"
+                ,"swagger-ui/index.html","/webjars/**","/swagger/**");
     }
 
     @Override

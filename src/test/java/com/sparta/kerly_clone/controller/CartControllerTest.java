@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.kerly_clone.dto.requestDto.CartRequestDto;
 import com.sparta.kerly_clone.model.Product;
 import com.sparta.kerly_clone.model.User;
-import com.sparta.kerly_clone.security.JwtAuthenticationFilter;
 import com.sparta.kerly_clone.security.WebSecurityConfig;
 import com.sparta.kerly_clone.service.CartService;
-import com.sparta.kerly_clone.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,12 +30,6 @@ class CartControllerTest {
 
     @MockBean
     private CartService cartService;
-
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     User testUser;
     Product mockProduct;

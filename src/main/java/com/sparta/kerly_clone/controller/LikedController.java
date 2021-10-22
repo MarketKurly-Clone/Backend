@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @Slf4j
@@ -28,7 +29,7 @@ public class LikedController {
     }
 
     @PostMapping("liked")
-    public ResponseDto liked(@RequestBody LikeRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseDto liked(@RequestBody LikeRequestDto requestDto, @ApiIgnore @AuthenticationPrincipal UserDetailsImpl userDetails) {
         log.info("POST, '/liked', reviewId={}", requestDto.getReviewId());
         if (userDetails == null) {
             throw new NoneLoginException("로그인 사용자만 이용할 수 있습니다.");
