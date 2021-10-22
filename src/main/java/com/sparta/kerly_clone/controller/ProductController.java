@@ -27,7 +27,7 @@ public class ProductController {
     public ResponseDto getProductByQuery(
                                   @ApiParam(value = "대분류", required = false) @RequestParam String category1
                                 , @ApiParam(value = "중분류", required = false)@RequestParam String category2
-                                , @ApiParam(value = "검색어", required = true) @RequestParam String query
+                                , @ApiParam(value = "검색어", required = false) @RequestParam String query
                                 , @ApiParam(value = "페이지 번호", required = true) @RequestParam int page) {
         log.info("GET, '/products/query', category1={}, category2={}, query={}, page={}", category1, category2, query, page);
 
