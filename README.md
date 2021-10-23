@@ -33,163 +33,23 @@
  <img width="660" alt="Screen_Shot_2021-10-19_at_2 57 47_PM" src="https://user-images.githubusercontent.com/70922665/138451938-7d7cba18-01e2-4312-b21c-03a30b6eedb6.png">
   
     
-- Api
-    <img width="1614" alt="Screen Shot 2021-10-22 at 9 15 42 PM" src="https://user-images.githubusercontent.com/70922665/138452114-4437e1d0-3409-4405-93a7-0d3744569530.png">
-<img width="1608" alt="Screen Shot 2021-10-22 at 9 15 54 PM" src="https://user-images.githubusercontent.com/70922665/138452134-d9d259c5-17b1-4f9a-a754-b573a25265d2.png">
-<img width="1604" alt="Screen Shot 2021-10-22 at 9 16 03 PM" src="https://user-images.githubusercontent.com/70922665/138452144-7e6ae7e9-0212-46ae-ac43-b5af7ea7b655.png">
-
-
+## Api(Swagger)
+http://15.165.159.211:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/
     
 
-# 트러블 슈팅
+# 트러블 슈팅 문제점/해결 과정
+## CORS Origin '*' 했는데 왜 에러가 발생할까? 
+프론트 측에서 CORS를 전부 허용해달라고 요청을 했었습니다. 
+Access-Control-Allow-Orign 에 *을 줬는데 CORS에러가 떴습니다.
+원인 : WebSecurtiyConfig의 configure에서 http.cors()가 빠져있어 발생한 문제였습니다.
 
-## 테스트 코드 작성
-### 1.1 UserService 테스트
-```java
-@ExtendWith(MockitoExtension.class)
-class UserServiceTest {
 
-    @Mock
-    UserRepository userRepository;
-    @Mock
-    JwtTokenProvider jwtTokenProvider;
-    @Mock
-    AuthenticationManagerBuilder authenticationManagerBuilder;
-    @Mock
-    PasswordEncoder passwordEncoder;
+# 테스트 코드 작성
+## 1. MockMvc를 이용한 Controller 테스트
+https://github.com/MarketKurly-Clone/Backend/tree/dev/src/test/java/com/sparta/kerly_clone/controller
+## 2. Mock을 이용한 Service 테스트
+https://github.com/MarketKurly-Clone/Backend/tree/dev/src/test/java/com/sparta/kerly_clone/service
 
-    SignupValidator signupValidator;
-    UserService userService;
-
-    @BeforeEach
-    void init() {
-        signupValidator = new SignupValidator(userRepository, passwordEncoder);
-        userService = new UserService(
-                signupValidator,
-                userRepository,
-                jwtTokenProvider,
-                authenticationManagerBuilder,
-                passwordEncoder);
-    }
-}
-```
-### 1.2 정상 테스트
-```java
-@Nested
-@DisplayName("회원가입")
-class SignUp {
-    @Test
-    @DisplayName("정상")
-    void 회원가입() {
-        //given
-        SignupRequestDto signupRequestDto = new SignupRequestDto("user@email.com", "password486", "user");
-
-        Mockito.when(userRepository.findByEmail(signupRequestDto.getEmail()))
-                .thenReturn(Optional.empty());
-        //when
-        boolean result = userService.registerUser(signupRequestDto);
-        //then
-        assertThat(result).isEqualTo(true);
-    }
-}
-```
-### 1.3 Exception 발생 테스트
-```java
-@Nested
-@DisplayName("회원정보 불일치")
-class NotMatch {
-    @Test
-    @DisplayName("비밀번호가 일치하지 않을 경우 예외 발생")
-    void 비밀번호불일치() {
-        //given
-        SignupRequestDto signupRequestDto = new SignupRequestDto("user@mail.com", "password486", "user");
-        User user = new User(signupRequestDto);
-        UserRequestDto userRequestDto = new UserRequestDto("user@mail.com", "asdf1234");
-
-        Mockito.when(userRepository.findByEmail(userRequestDto.getEmail()))
-                .thenReturn(Optional.of(user));
-        Mockito.when(passwordEncoder.matches(userRequestDto.getPassword(), user.getPassword()))
-                .thenReturn(false);
-        //when - then
-        assertThrows(UsernameNotFoundException.class,() -> userService.loginValidCheck(userRequestDto),"회원정보가 일치하지 않습니다. 다시 입력해주세요.");
-    }
-}
-```
-
-## 2. MockMvc를 이용한 Controller 테스트
-### 2.1 ProductController 테스트
-```java
-@WebMvcTest(
-        controllers = {ProductController.class},
-        excludeFilters = {
-                @ComponentScan.Filter(
-                        type = FilterType.ASSIGNABLE_TYPE,
-                        classes = WebSecurityConfig.class
-                )
-        }
-)
-class ProductControllerTest {
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mvc;
-
-    @MockBean
-    ProductService productService;
-
-    @MockBean
-    JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    private Page<Product> products;
-
-    @BeforeEach
-    public void setup() {
-        mvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity(new MockSpringSecurityFilter()))
-                .addFilters(new CharacterEncodingFilter("UTF-8",true))
-                .build();
-
-        mockProductSetup();
-    }
-
-    //테스트 데이터 추가
-    private void mockProductSetup() {
-        List<Product> productList = new ArrayList<>();
-        Product product1 = new Product("고구마", 10000L, "신선한 고구마", "채소", "고구마", "imageUrl", 0);
-        Product product2 = new Product("감자", 8000L, "커다란 감자", "채소", "감자", "imageUrl", 0);
-        Product product3 = new Product("삼겹살", 15000L, "냉동 삼겹살", "육류", "돼지고기", "imageUrl", 0);
-        Product product4 = new Product("한우", 20000L, "최고급 한우", "육류", "소고기", "imageUrl", 0);
-        Product product5 = new Product("상추", 3000L, "신선한 상추", "채소", "상추", "imageUrl", 0);
-        productList.add(product1);
-        productList.add(product2);
-        productList.add(product3);
-        productList.add(product4);
-        productList.add(product5);
-
-        products = new PageImpl<>(productList);
-    }
-}
-```
-
-### 2.2 ProductController 테스트
-```java
-@Test
-@DisplayName("상품 상세 조회")
-void 상품상세조회() throws Exception {
-    //given
-    when(productService.getProduct(1L)).thenReturn(products.getContent().get(0));
-    //when
-    MvcResult mvcResult = mvc.perform(get("/products/" + 1 ))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
-            .andDo(print())
-            .andReturn();
-    //then
-    JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
-    JSONObject item = jsonObject.getJSONObject("data");
-    Assertions.assertThat(item.getString("name")).isEqualTo("고구마");
-}
-```
 
 ## 3. MockMvc의 한글 깨짐
 테스트 코드 작성중 한글이 깨지는 경우가 있다. 이때는 addFileters로 UTF-8로 필터를 추가하면 정상적으로 한글이 출력된다.
