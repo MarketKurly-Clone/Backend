@@ -192,7 +192,7 @@ void 상품상세조회() throws Exception {
 ```
 
 ## 3. MockMvc의 한글 깨짐
-테스트 코드 작성중 한글이 깨지는 경우가 있다. 이때는 addFileters로 UTF-8로 필터를 추가하면 정상적으로 한글이 출력된다.
+테스트 코드 작성중 한글이 깨지는 경우가 있다. 이때는 addFilters UTF-8로 필터를 추가하면 정상적으로 한글이 출력된다.
 ``` java
 @Before
 public void setup() {
