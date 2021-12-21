@@ -4,7 +4,6 @@
 
 시연 영상 : [https://youtu.be/6Q4pqA0q8Q0](https://youtu.be/6Q4pqA0q8Q0)
 
-서비스 주소 : [http://kbumsoo.s3-website.ap-northeast-2.amazonaws.com/login](http://kbumsoo.s3-website.ap-northeast-2.amazonaws.com/login)
 
 ## 조원
 
